@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 import sys, pygame, math, random
+from engine import best_move
 
-WIDTH, HEIGHT = 360, 420
+WIDTH, HEIGHT = 600, 720
 GRID_SIZE = 3
 CELL = WIDTH // GRID_SIZE
 LINE_W = 6
@@ -120,7 +121,7 @@ def main():
     board = new_board()
     current_player = 1  # X starts
     running = True
-    ai_enabled = False
+    ai_enabled = True
     ai_as = 2  # AI plays 'O' by default (second)
     winner = None
     winline = None
@@ -156,15 +157,17 @@ def main():
                         winner, winline = check_winner(board)
                         if winner is None:
                             current_player = 3 - current_player
-
+        
+        # inside main loop, in AI section:
         if ai_enabled and winner is None and current_player == ai_as:
-            move = ai_move(board, ai_as, 3 - ai_as)
+            move = best_move(board, ai_as)
             if move is not None:
                 r, c = move
                 board[r][c] = ai_as
                 winner, winline = check_winner(board)
                 if winner is None:
                     current_player = 3 - current_player
+
 
         draw_grid()
         for r in range(GRID_SIZE):
